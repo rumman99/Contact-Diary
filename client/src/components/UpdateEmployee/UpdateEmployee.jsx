@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input } from 'antd';
-import './addEmplyee.css'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RollbackOutlined } from '@ant-design/icons';
 import { Bounce, toast } from 'react-toastify';
+import axios from 'axios';
 
-const AddEmployee = ({submitHandler}) => {
+const UpdateEmployee = ({updateHandler}) => {
+    const {id}= useParams();
     const navigate = useNavigate();
 
     const [form] = Form.useForm();
     const onFinish = (values) => {
-            submitHandler(values);
+            updateHandler({id: id, ...values});
             form.resetFields();
             navigate('/');
         };
             const onFinishFailed = (errorInfo) => {
             console.log('Failed:', errorInfo);
                 // Alert Style
-                toast.error("Input Can't be Blank!",{position: "top-right",
+                toast.error("Updated Successfully",{position: "top-right",
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -28,11 +29,22 @@ const AddEmployee = ({submitHandler}) => {
                 transition: Bounce,});
         }
 
+    useEffect(()=>{
+        const fetching = (async()=>{
+            try{
+                const response= await axios.get(`https://employee-list-production.up.railway.app/employee/${id}`)
+                const { firstName, lastName, phone } = response.data;
+                form.setFieldsValue({ firstName, lastName, phone });
+            }
+            catch(err){
+                console.log(err);
+            }
+        })()
+    },[])
 
     return (
-        <>
-        <h2 style={{marginTop:'100px'}}>Add Employee</h2>
-        <div className='input-style'>
+        <div>
+            <h2 style={{color:'yellow'}}>Edit Employee Details</h2>
             <Form form={form}
                 name="basic"
                 labelCol={{
@@ -78,19 +90,6 @@ const AddEmployee = ({submitHandler}) => {
                 </Form.Item>
 
                 <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                    {
-                    required: true,
-                    message: 'Please input your email!',
-                    },
-                ]}
-                >
-                <Input />
-                </Form.Item>
-
-                <Form.Item
                 label="Phone"
                 name="phone"
                 rules={[
@@ -110,14 +109,13 @@ const AddEmployee = ({submitHandler}) => {
                 }}
                 >
                 <Button type="primary" htmlType="submit">
-                    Submit
+                    Update
                 </Button>
                 </Form.Item>
             </Form>
-            </div>
-            <Link to='/' ><Button style={{marginTop:"50px"}} type="default" size='large' icon={<RollbackOutlined />}>Back</Button></Link>
-        </>
+            <Link to='/' ><Button style={{marginTop:"100px"}} type="default" size='large' icon={<RollbackOutlined />}>Back</Button></Link>
+        </div>
     );
 };
 
-export default AddEmployee;
+export default UpdateEmployee;

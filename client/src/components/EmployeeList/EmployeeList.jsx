@@ -6,8 +6,7 @@ import { Link } from 'react-router-dom';
 
 const EmployeeList = ({allEmployee, deleteHandler}) => {
     const style= {
-        marginBottom:"50px",
-        marginTop: "100px"
+        marginBottom:"60px"
     }
 
     return (
