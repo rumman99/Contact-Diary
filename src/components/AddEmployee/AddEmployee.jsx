@@ -115,7 +115,7 @@ const AddEmployee = ({submitHandler}) => {
                 </Form.Item>
             </Form>
             </div>
-            <Link to='/' ><Button style={{marginTop:"100px"}} type="default" size='large' icon={<RollbackOutlined />}>Back</Button></Link>
+            <Link to='/' ><Button style={{marginTop:"50px"}} type="default" size='large' icon={<RollbackOutlined />}>Back</Button></Link>
         </>
     );
 };
